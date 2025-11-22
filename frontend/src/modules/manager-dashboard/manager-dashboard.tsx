@@ -15,8 +15,6 @@ import {
 import { Add, Logout } from "@mui/icons-material";
 import { ProjectCard } from "../project-card/project-card";
 import { NewProjectDialog } from "../new-project-dialog/new-project-dialog";
-import { TeamAvailability } from "../team-availability/team-availability";
-import { Reports } from "../reports/reports";
 import { useNavigate } from "react-router";
 
 export const ManagerDashboard = ({
@@ -34,6 +32,9 @@ export const ManagerDashboard = ({
             await fetch("http://localhost:3001/projects", {
                 method: "GET",
                 mode: "cors",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
             })
                 .then((response) => {
                     return response.json();
@@ -105,7 +106,7 @@ export const ManagerDashboard = ({
                     </>
                 )}
 
-                {activeTab === 1 && <TeamAvailability projects={projects} />}
+                {/*activeTab === 1 && <TeamAvailability projects={projects} />*/}
 
                 {/*activeTab === 2 && <Reports projects={projects} />*/}
             </Container>

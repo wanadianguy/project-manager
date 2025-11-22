@@ -145,7 +145,6 @@ export const ProjectCard = ({
                     </Box>
                 </Collapse>
             </CardContent>
-
             <CardActions>
                 <Button size="small" onClick={() => onOpen(project)}>
                     Open Project

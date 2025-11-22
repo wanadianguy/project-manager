@@ -5,13 +5,6 @@
 - Go to `/backend` and run `npx mikro-orm migration:up`
 - From root directory, run `docker compose -f docker-compose.yml up -d`
 - Open `localhost:5173` in a web browser
-## Test credentials
-- manager:
-    - email: manager@example.com
-    - password: password
-- contributor:
-    - email: manager@example.com
-    - password: password
 ## Choices
 - I opted for a desktop first application since I assumed it would mostly/only be used on a desktop.
 - I chose to link entities as much as possible to have the choice to "populate" when getting data so that I would reduce the number of requests and therefore reduce the strain on the backend server (if we were to be on a production-grade application)
@@ -28,5 +21,4 @@
 - Create tests and comment code for maintainability
 - Fix a few bugs I came across
 ## Side notes
-- The authentication checks are deactivated (Anotation commented) to ease the testing, especially with Postman
 - `.env` was pushed for ease of testing, but we wouldn't do that on a production-grade application

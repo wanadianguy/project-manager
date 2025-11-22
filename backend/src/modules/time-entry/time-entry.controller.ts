@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, HttpCode, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { TimeEntryService } from './time-entry.service';
 import { CreateTimeEntryDto } from './dto/create-time-entry.dto';
 import { ApiOperation } from '@nestjs/swagger';
+import { AuthenticationGuard } from '../auth/auth.guard';
 
-//@UseGuards(AuthenticationGuard, RolesGuard)
+@UseGuards(AuthenticationGuard)
 @Controller('time-entries')
 export class TimeEntryController {
     constructor(private readonly timeEntriesService: TimeEntryService) {}

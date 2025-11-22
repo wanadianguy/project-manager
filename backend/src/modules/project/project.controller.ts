@@ -1,43 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ApiOperation } from '@nestjs/swagger';
+import { AuthenticationGuard, RolesGuard } from '../auth/auth.guard';
+import { Roles } from '../auth/role.decorator';
+import { Role } from '../user/enums/role.enum';
 
-//@UseGuards(AuthenticationGuard, RolesGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('projects')
 export class ProjectController {
     constructor(private readonly projectsService: ProjectService) {}
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Post()
     @ApiOperation({ summary: 'Create a project' })
     async create(@Body() createProjectDto: CreateProjectDto) {
         return this.projectsService.create(createProjectDto);
     }
 
-    //@Roles(Role.MANAGER)
     @Get()
     @ApiOperation({ summary: 'Get all projects' })
     findAll() {
         return this.projectsService.findAll();
     }
 
-    //@Roles(Role.MANAGER)
     @Get(':id')
     @ApiOperation({ summary: 'Get a project by id' })
     findOne(@Param('id', ParseUUIDPipe) id: string) {
         return this.projectsService.findOne(id);
     }
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Patch(':id')
     @ApiOperation({ summary: 'Update a project' })
     update(@Param('id', ParseUUIDPipe) id: string, @Body() updateProjectDto: UpdateProjectDto) {
         return this.projectsService.update(id, updateProjectDto);
     }
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Delete(':id')
     @ApiOperation({ summary: 'Delete a project' })
     @HttpCode(204)

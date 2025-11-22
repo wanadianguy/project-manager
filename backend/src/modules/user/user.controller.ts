@@ -1,20 +1,23 @@
-import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiOperation } from '@nestjs/swagger';
+import { AuthenticationGuard, RolesGuard } from '../auth/auth.guard';
+import { Roles } from '../auth/role.decorator';
+import { Role } from './enums/role.enum';
 
-//@UseGuards(AuthenticationGuard, RolesGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Get()
     @ApiOperation({ summary: 'Get all users' })
     getUsers() {
         return this.userService.getUsers();
     }
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Get(':role')
     @ApiOperation({ summary: 'Get users by role' })
     findOne(@Param('role') role: string) {

@@ -1,50 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { PhaseService } from './phase.service';
 import { CreatePhaseDto } from './dto/create-phase.dto';
 import { UpdatePhaseDto } from './dto/update-phase.dto';
 import { ApiOperation } from '@nestjs/swagger';
+import { AuthenticationGuard, RolesGuard } from '../auth/auth.guard';
+import { Roles } from '../auth/role.decorator';
+import { Role } from '../user/enums/role.enum';
 
-//@UseGuards(AuthenticationGuard, RolesGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('phases')
 export class PhaseController {
     constructor(private readonly phasesService: PhaseService) {}
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Post()
     @ApiOperation({ summary: 'Create a phase' })
     async create(@Body() createPhaseDto: CreatePhaseDto) {
         return this.phasesService.create(createPhaseDto);
     }
 
-    //@Roles(Role.MANAGER)
     @Get()
     @ApiOperation({ summary: 'Get all phases' })
     async findAll() {
         return this.phasesService.findAll();
     }
 
-    //@Roles(Role.MANAGER)
     @Get(':id')
     @ApiOperation({ summary: 'Get a phase by id' })
     async findOne(@Param('id', ParseUUIDPipe) id: string) {
         return this.phasesService.findOne(id);
     }
 
-    //@Roles(Role.MANAGER)
     @Get('project/:projectId')
     @ApiOperation({ summary: 'Get phases by project id' })
     async findByProject(@Param('projectId', ParseUUIDPipe) projectId: string) {
         return this.phasesService.findByProject(projectId);
     }
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Patch(':id')
     @ApiOperation({ summary: 'Update a phase' })
     async update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePhaseDto: UpdatePhaseDto) {
         return this.phasesService.update(id, updatePhaseDto);
     }
 
-    //@Roles(Role.MANAGER)
+    @Roles(Role.MANAGER)
     @Delete(':id')
     @ApiOperation({ summary: 'Delete a phase' })
     @HttpCode(204)

@@ -9,6 +9,7 @@
 - I opted for a desktop first application since I assumed it would mostly/only be used on a desktop.
 - I chose to link entities as much as possible to have the choice to "populate" when getting data so that I would reduce the number of requests and therefore reduce the strain on the backend server (if we were to be on a production-grade application)
 ## What's next
+- Add credentials to api requests (for the frontend) and create a retry function to create a new token (or go back to the login page)
 - Improve resiliency
 - Improve responsiveness of the frontend (not that important since it's mostly a desktop application)
 - Dynamic reload of components after adding project, phase, task...

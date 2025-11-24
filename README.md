@@ -2,7 +2,7 @@
 ## Launch Project
 - Have a docker deamon running
 - From root directory, run `docker compose -f docker-compose.database.yml up -d`
-- Go to `/backend` and run `npx mikro-orm migration:up`
+- Go to `/backend` and run `NODE_ENV=local npx mikro-orm migration:up`
 - From root directory, run `docker compose -f docker-compose.yml up -d`
 - Open `localhost:5173` in a web browser
 ## Choices

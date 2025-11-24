@@ -3,9 +3,9 @@ FROM node:24 AS builder
 WORKDIR /app
 COPY . .
 RUN npm ci
-RUN npm run build
+RUN npx nest build
 
-FROM node:24-slim
+FROM node:24-alpine
 
 WORKDIR /app
 COPY --from=builder /app/dist ./dist

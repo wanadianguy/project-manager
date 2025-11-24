@@ -1,6 +1,6 @@
-import type { Project } from "../../types/project.type";
+import type { Project } from '../../types/project.type';
 
 export type ProjectPhasesTasksProps = {
-  project: Project;
-  onSave: (project: Project) => void;
+    project: Project;
+    onSave: (project: Project) => void;
 };

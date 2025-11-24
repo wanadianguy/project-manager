@@ -1,18 +1,18 @@
-import type { Project } from "../../types/project.type";
+import type { Project } from '../../types/project.type';
 
 export type ProjectInvoicingProps = {
-  project: Project;
+    project: Project;
 };
 
 export type DetailedInvoice = {
-  items?: InvoiceItem[];
-  total: number;
+    items?: InvoiceItem[];
+    total: number;
 };
 
 export type InvoiceItem = {
-  task: string;
-  phase: string;
-  hours: number;
-  rate: number;
-  amount: number;
+    task: string;
+    phase: string;
+    hours: number;
+    rate: number;
+    amount: number;
 };

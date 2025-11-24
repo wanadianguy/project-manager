@@ -1,5 +1,5 @@
-import type { Project } from "../../types/project.type";
+import type { Project } from '../../types/project.type';
 
 export type BudgetReportProps = {
-  project?: Project;
+    project?: Project;
 };

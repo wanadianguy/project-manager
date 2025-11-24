@@ -1,11 +1,11 @@
-import type { Task } from "./task.type";
-import type { User } from "./user.type";
+import type { Task } from './task.type';
+import type { User } from './user.type';
 
 export type TimeEntry = {
-  id: string;
-  workDate: string;
-  hours: number;
-  isBillable: boolean;
-  user?: User;
-  task?: Task;
+    id: string;
+    workDate: string;
+    hours: number;
+    isBillable: boolean;
+    user?: User;
+    task?: Task;
 };

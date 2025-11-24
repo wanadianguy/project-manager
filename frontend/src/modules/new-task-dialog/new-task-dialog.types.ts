@@ -4,5 +4,4 @@ export type NewTaskDialogProps = {
     project: Project;
     open: boolean;
     onClose: () => void;
-    onSave: (project: Project) => void;
 };

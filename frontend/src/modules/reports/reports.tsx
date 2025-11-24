@@ -1,18 +1,11 @@
 //Not ready
-import { useState } from "react";
-import type { ReportsProps } from "./reports.types";
-import {
-    Box,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    Typography,
-} from "@mui/material";
-import { BudgetReport } from "../budget-report/budget-report";
+import { useState } from 'react';
+import type { ReportsProps } from './reports.types';
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { BudgetReport } from '../budget-report/budget-report';
 
-export const Reports = ({ projects }: ReportsProps) => {
-    const [selectedProject, setSelectedProject] = useState<number | string>("");
+export const Reports = (props: ReportsProps) => {
+    const [selectedProject, setSelectedProject] = useState<number | string>('');
 
     return (
         <Box>
@@ -27,7 +20,7 @@ export const Reports = ({ projects }: ReportsProps) => {
                     onChange={(event) => setSelectedProject(event.target.value)}
                     label="Select Project"
                 >
-                    {projects.map((project) => (
+                    {props.projects.map((project) => (
                         <MenuItem key={project.id} value={project.id}>
                             {project.name}
                         </MenuItem>
@@ -35,13 +28,7 @@ export const Reports = ({ projects }: ReportsProps) => {
                 </Select>
             </FormControl>
 
-            {selectedProject && (
-                <BudgetReport
-                    project={projects.find(
-                        (project) => project.id === selectedProject,
-                    )}
-                />
-            )}
+            {selectedProject && <BudgetReport project={props.projects.find((project) => project.id === selectedProject)} />}
         </Box>
     );
 };

@@ -1,12 +1,12 @@
-import type { ProjectOverviewProps } from "./project-overview.types";
-import { Grid } from "@mui/system";
-import { Card, CardContent, Typography } from "@mui/material";
+import type { ProjectOverviewProps } from './project-overview.types';
+import { Grid } from '@mui/system';
+import { Card, CardContent, Typography } from '@mui/material';
 
-export const ProjectOverview = ({ project }: ProjectOverviewProps) => {
+export const ProjectOverview = (props: ProjectOverviewProps) => {
     const budget = {
-        forecast: project.forecastedBudget,
-        actual: project.budget,
-        remaining: project.forecastedBudget - project.budget,
+        forecast: props.project.forecastedBudget,
+        actual: props.project.budget,
+        remaining: props.project.forecastedBudget - props.project.budget,
     };
 
     return (
@@ -17,9 +17,7 @@ export const ProjectOverview = ({ project }: ProjectOverviewProps) => {
                         <Typography color="text.secondary" gutterBottom>
                             Forecast Budget
                         </Typography>
-                        <Typography variant="h4">
-                            ${budget.forecast.toFixed(0)}
-                        </Typography>
+                        <Typography variant="h4">${budget.forecast.toFixed(0)}</Typography>
                     </CardContent>
                 </Card>
             </Grid>
@@ -29,9 +27,7 @@ export const ProjectOverview = ({ project }: ProjectOverviewProps) => {
                         <Typography color="text.secondary" gutterBottom>
                             Actual Spent
                         </Typography>
-                        <Typography variant="h4">
-                            ${budget.actual.toFixed(0)}
-                        </Typography>
+                        <Typography variant="h4">${budget.actual.toFixed(0)}</Typography>
                     </CardContent>
                 </Card>
             </Grid>
@@ -41,12 +37,7 @@ export const ProjectOverview = ({ project }: ProjectOverviewProps) => {
                         <Typography color="text.secondary" gutterBottom>
                             Remaining
                         </Typography>
-                        <Typography
-                            variant="h4"
-                            color={
-                                budget.remaining < 0 ? "error" : "success.main"
-                            }
-                        >
+                        <Typography variant="h4" color={budget.remaining < 0 ? 'error' : 'success.main'}>
                             ${budget.remaining.toFixed(0)}
                         </Typography>
                     </CardContent>

@@ -1,84 +1,66 @@
-import { useState } from "react";
-import type { NewPhaseDialogProps } from "./new-phase-dialog.types";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField,
-} from "@mui/material";
-import type { Phase } from "../../types/phase.type";
+import { useState } from 'react';
+import type { NewPhaseDialogProps } from './new-phase-dialog.types';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import type { Phase } from '../../types/phase.type';
 
-export const NewPhaseDialog = ({
-    project,
-    open,
-    onClose,
-    onSave,
-}: NewPhaseDialogProps) => {
+export const NewPhaseDialog = (props: NewPhaseDialogProps) => {
     const [requestInProgress, setRequestInProgress] = useState(false);
-    const [name, setName] = useState("");
+    const [name, setName] = useState('');
     const [startDate, setStartDate] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
     const [endDate, setEndDate] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
 
     const handleSubmit = () => {
         setRequestInProgress(true);
-        fetch("http://localhost:3001/phases", {
-            method: "POST",
-            mode: "cors",
+        fetch('http://localhost:3001/phases', {
+            method: 'POST',
+            mode: 'cors',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                projectId: project.id,
+                projectId: props.project.id,
                 name,
                 startDate: startDate.date,
                 endDate: endDate.date,
-                status: "planned",
+                status: 'planned',
             }),
         })
             .then((response) => {
                 return response.json();
             })
             .then((data: Phase) => {
-                project.phases.push(data);
-                onSave(project);
+                props.project.phases.push(data);
+                props.onSave(props.project);
                 setRequestInProgress(false);
-                setName("");
+                setName('');
                 setStartDate({
                     date: new Date(),
-                    string: "",
+                    string: '',
                 });
                 setEndDate({
                     date: new Date(),
-                    string: "",
+                    string: '',
                 });
-                onClose();
+                props.onClose();
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 setRequestInProgress(false);
                 return;
             });
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+        <Dialog open={props.open} onClose={props.onClose} maxWidth="sm" fullWidth>
             <DialogTitle>Create New Phase</DialogTitle>
             <DialogContent>
-                <TextField
-                    fullWidth
-                    label="Phase Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    margin="normal"
-                />
+                <TextField fullWidth label="Phase Name" value={name} onChange={(e) => setName(e.target.value)} margin="normal" />
                 <TextField
                     fullWidth
                     label="Start Date"
@@ -109,12 +91,8 @@ export const NewPhaseDialog = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    disabled={requestInProgress}
-                >
+                <Button onClick={props.onClose}>Cancel</Button>
+                <Button onClick={handleSubmit} variant="contained" disabled={requestInProgress}>
                     Create
                 </Button>
             </DialogActions>

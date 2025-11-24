@@ -1,30 +1,19 @@
-import type { ProjectStaffingProps } from "./project-staffing.types";
-import {
-    Box,
-    Button,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography,
-} from "@mui/material";
-import { Add } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import type { Staff } from "../../types/staff.type";
-import { NewStaffDialog } from "../new-staff-dialog/new-staff-dialog";
-import type { User } from "../../types/user.type";
+import type { ProjectStaffingProps } from './project-staffing.types';
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import type { Staff } from '../../types/staff.type';
+import { NewStaffDialog } from '../new-staff-dialog/new-staff-dialog';
+import type { User } from '../../types/user.type';
 
-export const ProjectStaffing = ({ project, onSave }: ProjectStaffingProps) => {
+export const ProjectStaffing = (props: ProjectStaffingProps) => {
     const [newStaffOpen, setNewStaffOpen] = useState(false);
     const [contributors, setContributors] = useState<User[]>([]);
 
     useEffect(() => {
-        fetch("http://localhost:3001/users/contributor", {
-            method: "GET",
-            mode: "cors",
+        fetch('http://localhost:3001/users/contributor', {
+            method: 'GET',
+            mode: 'cors',
         })
             .then((response) => {
                 return response.json();
@@ -33,21 +22,15 @@ export const ProjectStaffing = ({ project, onSave }: ProjectStaffingProps) => {
                 setContributors(data);
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
     }, []);
     return (
         <Box>
-            <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
-            >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Typography variant="h6">Project Staffing</Typography>
-                <Button
-                    variant="outlined"
-                    startIcon={<Add />}
-                    onClick={() => setNewStaffOpen(true)}
-                >
+                <Button variant="outlined" startIcon={<Add />} onClick={() => setNewStaffOpen(true)}>
                     Add Staff
                 </Button>
             </Box>
@@ -64,22 +47,14 @@ export const ProjectStaffing = ({ project, onSave }: ProjectStaffingProps) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {project.staffing.map((staff) => {
+                        {props.project.staffing.map((staff) => {
                             return (
                                 <TableRow key={staff.id}>
                                     <TableCell>{staff.user.name}</TableCell>
                                     <TableCell>{staff.roleName}</TableCell>
-                                    <TableCell align="right">
-                                        ${staff.hourlyRate}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        {staff.forecastedHours}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        $
-                                        {staff.hourlyRate *
-                                            staff.forecastedHours}
-                                    </TableCell>
+                                    <TableCell align="right">${staff.hourlyRate}</TableCell>
+                                    <TableCell align="right">{staff.forecastedHours}</TableCell>
+                                    <TableCell align="right">${staff.hourlyRate * staff.forecastedHours}</TableCell>
                                 </TableRow>
                             );
                         })}
@@ -88,12 +63,12 @@ export const ProjectStaffing = ({ project, onSave }: ProjectStaffingProps) => {
             </TableContainer>
             <NewStaffDialog
                 users={contributors}
-                project={project}
+                project={props.project}
                 open={newStaffOpen}
                 onClose={() => setNewStaffOpen(false)}
                 onSave={(staff: Staff) => {
-                    project.staffing.push(staff);
-                    onSave(project);
+                    props.project.staffing.push(staff);
+                    props.onSave(props.project);
                 }}
             />
         </Box>

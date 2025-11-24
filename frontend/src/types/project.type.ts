@@ -1,6 +1,6 @@
 import type { Invoice } from './invoice.type';
 import type { Phase } from './phase.type';
-import type { Satff } from './staff.type';
+import type { Staff } from './staff.type';
 
 export type Project = {
     id: string;
@@ -11,7 +11,7 @@ export type Project = {
     budget: number;
     forecastedBudget: number;
     status: 'planned' | 'in progress' | 'done';
-    staffing: Satff[];
+    staffing: Staff[];
     phases: Phase[];
     invoices: Invoice[];
 };

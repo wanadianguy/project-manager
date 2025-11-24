@@ -1,72 +1,51 @@
-import { useState } from "react";
-import type { NewStaffDialogProps } from "./new-staff-dialog.types";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Select,
-    MenuItem,
-    TextField,
-    Grid,
-} from "@mui/material";
-import type { Staff } from "../../types/staff.type";
+import { useState } from 'react';
+import type { NewStaffDialogProps } from './new-staff-dialog.types';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, TextField } from '@mui/material';
+import type { Staff } from '../../types/staff.type';
 
-export const NewStaffDialog = ({
-    users,
-    project,
-    open,
-    onClose,
-    onSave,
-}: NewStaffDialogProps) => {
-    const [userId, setUserId] = useState("");
-    const [roleName, setRoleName] = useState("");
+export const NewStaffDialog = (props: NewStaffDialogProps) => {
+    const [userId, setUserId] = useState('');
+    const [roleName, setRoleName] = useState('');
     const [hourlyRate, setHourlyRate] = useState(0);
     const [forecastedHours, setForecastedHours] = useState(0);
 
     const handleSubmit = () => {
-        fetch("http://localhost:3001/staffing", {
-            method: "POST",
-            mode: "cors",
+        fetch('http://localhost:3001/staffing', {
+            method: 'POST',
+            mode: 'cors',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 roleName,
                 hourlyRate,
                 forecastedHours,
-                projectId: project.id,
+                projectId: props.project.id,
                 userId,
             }),
         })
             .then((response) => {
                 return response.json();
             })
-            .then((data: Staff) => onSave(data))
+            .then((data: Staff) => props.onSave(data))
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
 
-        setUserId("");
-        setRoleName("");
+        setUserId('');
+        setRoleName('');
         setHourlyRate(0);
         setForecastedHours(0);
-        onClose();
+        props.onClose();
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+        <Dialog open={props.open} onClose={props.onClose} maxWidth="sm" fullWidth>
             <DialogTitle>Create New Phase</DialogTitle>
             <DialogContent>
-                <Select
-                    labelId="user-id"
-                    id="user"
-                    label="User"
-                    onChange={(e) => setUserId(e.target.value as string)}
-                >
-                    {users.map((user) => (
+                <Select labelId="user-id" id="user" label="User" onChange={(e) => setUserId(e.target.value as string)}>
+                    {props.users.map((user) => (
                         <MenuItem value={user.id}>{user.name}</MenuItem>
                     ))}
                 </Select>
@@ -97,7 +76,7 @@ export const NewStaffDialog = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={props.onClose}>Cancel</Button>
                 <Button onClick={handleSubmit} variant="contained">
                     Create
                 </Button>

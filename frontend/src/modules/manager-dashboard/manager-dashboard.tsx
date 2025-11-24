@@ -1,26 +1,13 @@
-import { useEffect, useState } from "react";
-import type { ManagerDashboardProps } from "./manager-dashboard.type";
-import type { Project } from "../../types/project.type";
-import {
-    AppBar,
-    Box,
-    Container,
-    IconButton,
-    Tabs,
-    Toolbar,
-    Typography,
-    Tab,
-    Button,
-} from "@mui/material";
-import { Add, Logout } from "@mui/icons-material";
-import { ProjectCard } from "../project-card/project-card";
-import { NewProjectDialog } from "../new-project-dialog/new-project-dialog";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from 'react';
+import type { ManagerDashboardProps } from './manager-dashboard.type';
+import type { Project } from '../../types/project.type';
+import { AppBar, Box, Container, IconButton, Tabs, Toolbar, Typography, Tab, Button } from '@mui/material';
+import { Add, Logout } from '@mui/icons-material';
+import { ProjectCard } from '../project-card/project-card';
+import { NewProjectDialog } from '../new-project-dialog/new-project-dialog';
+import { useNavigate } from 'react-router';
 
-export const ManagerDashboard = ({
-    onLogout,
-    onNavigate,
-}: ManagerDashboardProps) => {
+export const ManagerDashboard = (props: ManagerDashboardProps) => {
     const navigate = useNavigate();
 
     const [projects, setProjects] = useState<Project[]>([]);
@@ -28,27 +15,23 @@ export const ManagerDashboard = ({
     const [activeTab, setActiveTab] = useState(0);
 
     useEffect(() => {
-        const getProjects = async () => {
-            await fetch("http://localhost:3001/projects", {
-                method: "GET",
-                mode: "cors",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                },
+        fetch('http://localhost:3001/projects', {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        })
+            .then((response) => {
+                return response.json();
             })
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data: Project[]) => {
-                    setProjects(data);
-                })
-                .catch((error) => {
-                    console.error("Something went wrong: " + error.message);
-                    return;
-                });
-        };
-
-        getProjects();
+            .then((data: Project[]) => {
+                setProjects(data);
+            })
+            .catch((error) => {
+                console.error(error);
+                return;
+            });
     }, []);
 
     return (
@@ -58,18 +41,14 @@ export const ManagerDashboard = ({
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Manager Dashboard
                     </Typography>
-                    <IconButton color="inherit" onClick={onLogout}>
+                    <IconButton color="inherit" onClick={props.onLogout}>
                         <Logout />
                     </IconButton>
                 </Toolbar>
             </AppBar>
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Tabs
-                    value={activeTab}
-                    onChange={(_, value) => setActiveTab(value)}
-                    sx={{ mb: 3 }}
-                >
+                <Tabs value={activeTab} onChange={(_, value) => setActiveTab(value)} sx={{ mb: 3 }}>
                     <Tab label="Projects" />
                     <Tab label="Team Availability" />
                     {/*<Tab label="Reports" />*/}
@@ -79,17 +58,13 @@ export const ManagerDashboard = ({
                     <>
                         <Box
                             sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
+                                display: 'flex',
+                                justifyContent: 'space-between',
                                 mb: 3,
                             }}
                         >
                             <Typography variant="h5">Projects</Typography>
-                            <Button
-                                variant="contained"
-                                startIcon={<Add />}
-                                onClick={() => setNewProjectOpen(true)}
-                            >
+                            <Button variant="contained" startIcon={<Add />} onClick={() => setNewProjectOpen(true)}>
                                 New Project
                             </Button>
                         </Box>
@@ -98,9 +73,9 @@ export const ManagerDashboard = ({
                             <ProjectCard
                                 key={project.id}
                                 project={project}
-                                onOpen={() =>
-                                    navigate(`/project/${project.id}`)
-                                }
+                                onOpen={() => {
+                                    navigate(`/project/${project.id}`);
+                                }}
                             />
                         ))}
                     </>

@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-import type {
-    ProjectInvoicingProps,
-    DetailedInvoice,
-    InvoiceItem,
-} from "./project-invoicing.types";
+import { useEffect, useState } from 'react';
+import type { ProjectInvoicingProps, DetailedInvoice, InvoiceItem } from './project-invoicing.types';
 import {
     Box,
     Button,
@@ -18,21 +14,21 @@ import {
     TableRow,
     TextField,
     Typography,
-} from "@mui/material";
-import { useParams } from "react-router";
-import type { TimeEntry } from "../../types/time-entry.type";
-import type { Staff } from "../../types/staff.type";
-import { Receipt } from "@mui/icons-material";
+} from '@mui/material';
+import { useParams } from 'react-router';
+import type { TimeEntry } from '../../types/time-entry.type';
+import type { Staff } from '../../types/staff.type';
+import { Receipt } from '@mui/icons-material';
 
-export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
+export const ProjectInvoicing = (props: ProjectInvoicingProps) => {
     const { id } = useParams();
     const [periodStart, setPeriodStart] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
     const [periodEnd, setPeriodEnd] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
     const [timeEntries, setTimeEntries] = useState<TimeEntry[]>();
     const [staffing, setStaffing] = useState<Staff[]>();
@@ -43,8 +39,8 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
 
     useEffect(() => {
         fetch(`http://localhost:3001/time-entries/project/${id}`, {
-            method: "GET",
-            mode: "cors",
+            method: 'GET',
+            mode: 'cors',
         })
             .then((response) => {
                 return response.json();
@@ -53,13 +49,13 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
                 setTimeEntries(data);
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
 
         fetch(`http://localhost:3001/staffing/project/${id}`, {
-            method: "GET",
-            mode: "cors",
+            method: 'GET',
+            mode: 'cors',
         })
             .then((response) => {
                 return response.json();
@@ -68,7 +64,7 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
                 setStaffing(data);
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
     }, []);
@@ -81,19 +77,13 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
 
         timeEntries.forEach((entry) => {
             const workDate = new Date(entry.workDate);
-            if (
-                workDate >= periodStart.date &&
-                workDate <= periodEnd.date &&
-                entry.isBillable
-            ) {
-                const staff = staffing.find(
-                    (staffMember) => staffMember.user?.id === entry.user?.id,
-                );
+            if (workDate >= periodStart.date && workDate <= periodEnd.date && entry.isBillable) {
+                const staff = staffing.find((staffMember) => staffMember.user?.id === entry.user?.id);
                 const amount = entry.hours * (staff?.hourlyRate ?? 0);
 
                 items.push({
-                    task: entry.task?.title ?? "",
-                    phase: entry.task?.phase?.name ?? "",
+                    task: entry.task?.title ?? '',
+                    phase: entry.task?.phase?.name ?? '',
                     hours: entry.hours,
                     rate: staff?.hourlyRate ?? 0,
                     amount,
@@ -108,14 +98,14 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
 
     const submitInvoice = () => {
         fetch(`http://localhost:3001/invoices`, {
-            method: "POST",
-            mode: "cors",
+            method: 'POST',
+            mode: 'cors',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                projectId: project.id,
-                clientName: project.clientName,
+                projectId: props.project.id,
+                clientName: props.project.clientName,
                 startDate: periodStart.date,
                 endDate: periodEnd.date,
                 amount: detailedInvoice.total,
@@ -125,7 +115,7 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
                 return response.json();
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
     };
@@ -168,12 +158,7 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
                     />
                 </Grid>
                 <Grid>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        onClick={submitInvoice}
-                        sx={{ height: "56px" }}
-                    >
+                    <Button fullWidth variant="contained" onClick={submitInvoice} sx={{ height: '56px' }}>
                         Submit Invoice
                     </Button>
                 </Grid>
@@ -183,20 +168,12 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
                 <Card>
                     <CardContent>
                         <Typography variant="h6" gutterBottom>
-                            Invoice for {project.name}
+                            Invoice for {props.project.name}
                         </Typography>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            gutterBottom
-                        >
-                            Client: {project.clientName}
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Client: {props.project.clientName}
                         </Typography>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            gutterBottom
-                        >
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
                             {`Period: ${periodStart.string} to ${periodEnd.string}`}
                         </Typography>
 
@@ -206,61 +183,35 @@ export const ProjectInvoicing = ({ project }: ProjectInvoicingProps) => {
                                     <TableRow>
                                         <TableCell>Task</TableCell>
                                         <TableCell>Phase</TableCell>
-                                        <TableCell align="right">
-                                            Hours
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            Rate
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            Amount
-                                        </TableCell>
+                                        <TableCell align="right">Hours</TableCell>
+                                        <TableCell align="right">Rate</TableCell>
+                                        <TableCell align="right">Amount</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {detailedInvoice.items &&
-                                        detailedInvoice.items.map(
-                                            (item, idx) => (
-                                                <TableRow key={idx}>
-                                                    <TableCell>
-                                                        {item.task}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {item.phase}
-                                                    </TableCell>
-                                                    <TableCell align="right">
-                                                        {item.hours}
-                                                    </TableCell>
-                                                    <TableCell align="right">
-                                                        ${item.rate}
-                                                    </TableCell>
-                                                    <TableCell align="right">
-                                                        $
-                                                        {item.amount.toFixed(2)}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ),
-                                        )}
+                                        detailedInvoice.items.map((item, idx) => (
+                                            <TableRow key={idx}>
+                                                <TableCell>{item.task}</TableCell>
+                                                <TableCell>{item.phase}</TableCell>
+                                                <TableCell align="right">{item.hours}</TableCell>
+                                                <TableCell align="right">${item.rate}</TableCell>
+                                                <TableCell align="right">${item.amount.toFixed(2)}</TableCell>
+                                            </TableRow>
+                                        ))}
                                     <TableRow>
                                         <TableCell colSpan={4} align="right">
-                                            <Typography variant="h6">
-                                                Total:
-                                            </Typography>
+                                            <Typography variant="h6">Total:</Typography>
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Typography variant="h6">
-                                                $
-                                                {detailedInvoice.total.toFixed(
-                                                    2,
-                                                )}
-                                            </Typography>
+                                            <Typography variant="h6">${detailedInvoice.total.toFixed(2)}</Typography>
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
 
-                        <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+                        <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
                             <Button variant="contained" startIcon={<Receipt />}>
                                 Export PDF
                             </Button>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import type { TimeLoggingDialogProps } from "./time-logging-dialogue.type";
-import type { TimeEntry } from "../../types/time-entry.type";
+import { useEffect, useState } from 'react';
+import type { TimeLoggingDialogProps } from './time-logging-dialogue.type';
+import type { TimeEntry } from '../../types/time-entry.type';
 import {
     Box,
     Button,
@@ -20,30 +20,23 @@ import {
     TableRow,
     TextField,
     Typography,
-} from "@mui/material";
+} from '@mui/material';
 
-export const TimeLoggingDialog = ({
-    task,
-    open,
-    onClose,
-}: TimeLoggingDialogProps) => {
-    const userId = localStorage.getItem("id");
+export const TimeLoggingDialog = (props: TimeLoggingDialogProps) => {
+    const userId = localStorage.getItem('id');
     const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
     const [selectedDate, setSelectedDate] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
     const [hours, setHours] = useState(0);
     const [isBillable, setIsBillable] = useState(true);
 
     useEffect(() => {
-        fetch(
-            ` http://localhost:3001/time-entries/task/${task.id}/user/${userId}`,
-            {
-                method: "GET",
-                mode: "cors",
-            },
-        )
+        fetch(` http://localhost:3001/time-entries/task/${props.task.id}/user/${userId}`, {
+            method: 'GET',
+            mode: 'cors',
+        })
             .then((response) => {
                 return response.json();
             })
@@ -51,7 +44,7 @@ export const TimeLoggingDialog = ({
                 setTimeEntries(data);
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
     }, []);
@@ -60,13 +53,13 @@ export const TimeLoggingDialog = ({
         if (!selectedDate || !hours || !userId) return;
 
         fetch(`http://localhost:3001/time-entries`, {
-            method: "POST",
-            mode: "cors",
+            method: 'POST',
+            mode: 'cors',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                taskId: task.id,
+                taskId: props.task.id,
                 userId: userId,
                 workDate: selectedDate.date,
                 hours: hours,
@@ -77,7 +70,7 @@ export const TimeLoggingDialog = ({
                 return response.json();
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
 
@@ -85,18 +78,18 @@ export const TimeLoggingDialog = ({
         setIsBillable(true);
         setSelectedDate({
             date: new Date(),
-            string: "",
+            string: '',
         });
         setHours(0);
 
-        onClose();
+        props.onClose();
     };
 
     const totalHours = timeEntries.reduce((sum, entry) => sum + entry.hours, 0);
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle>Log Time - {task.title}</DialogTitle>
+        <Dialog open={props.open} onClose={props.onClose} maxWidth="md" fullWidth>
+            <DialogTitle>Log Time - {props.task.title}</DialogTitle>
             <DialogContent>
                 <Box sx={{ mb: 3 }}>
                     <Typography variant="subtitle2" gutterBottom>
@@ -138,24 +131,12 @@ export const TimeLoggingDialog = ({
                         inputProps={{ min: 0, step: 0.5 }}
                     />
                     <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={isBillable}
-                                onChange={(event: any) =>
-                                    setIsBillable(event.target.checked)
-                                }
-                            />
-                        }
+                        control={<Checkbox checked={isBillable} onChange={(event) => setIsBillable(event.target.checked)} />}
                         label="Billable"
                     />
                 </Grid>
 
-                <Button
-                    variant="contained"
-                    onClick={handleLogTime}
-                    disabled={!selectedDate || !hours}
-                    fullWidth
-                >
+                <Button variant="contained" onClick={handleLogTime} disabled={!selectedDate || !hours} fullWidth>
                     Log Time
                 </Button>
 
@@ -178,10 +159,7 @@ export const TimeLoggingDialog = ({
                             {timeEntries.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={3} align="center">
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                        >
+                                        <Typography variant="body2" color="text.secondary">
                                             No time entries yet
                                         </Typography>
                                     </TableCell>
@@ -190,12 +168,8 @@ export const TimeLoggingDialog = ({
                                 timeEntries.map((entry) => (
                                     <TableRow key={entry.id}>
                                         <TableCell>{entry.workDate}</TableCell>
-                                        <TableCell align="right">
-                                            {entry.hours}h
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {entry.isBillable ? "✓" : "—"}
-                                        </TableCell>
+                                        <TableCell align="right">{entry.hours}h</TableCell>
+                                        <TableCell align="center">{entry.isBillable ? '✓' : '—'}</TableCell>
                                     </TableRow>
                                 ))
                             )}
@@ -204,7 +178,7 @@ export const TimeLoggingDialog = ({
                 </TableContainer>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Close</Button>
+                <Button onClick={props.onClose}>Close</Button>
             </DialogActions>
         </Dialog>
     );

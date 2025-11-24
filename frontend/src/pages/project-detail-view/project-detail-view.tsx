@@ -1,33 +1,21 @@
-import { useEffect, useState } from "react";
-import {
-    AppBar,
-    Box,
-    Card,
-    CardContent,
-    Container,
-    Grid,
-    IconButton,
-    Tabs,
-    Toolbar,
-    Typography,
-    Tab,
-} from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
-import { ProjectStaffing } from "../../modules/project-staffing/project-staffing";
-import { ProjectPhasesTasks } from "../../modules/project-phases-tasks/project-phases-tasks";
-import { ProjectInvoicing } from "../../modules/project-invoicing/project-invoicing";
-import { ProjectOverview } from "../../modules/project-overview/project-overview";
-import type { Project } from "../../types/project.type";
-import { useNavigate } from "react-router";
-import { useParams } from "react-router";
+import { useEffect, useState } from 'react';
+import { AppBar, Box, Card, CardContent, Container, Grid, IconButton, Tabs, Toolbar, Typography, Tab } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+import { ProjectStaffing } from '../../modules/project-staffing/project-staffing';
+import { ProjectPhasesTasks } from '../../modules/project-phases-tasks/project-phases-tasks';
+import { ProjectInvoicing } from '../../modules/project-invoicing/project-invoicing';
+import { ProjectOverview } from '../../modules/project-overview/project-overview';
+import type { Project } from '../../types/project.type';
+import { useNavigate } from 'react-router';
+import { useParams } from 'react-router';
 
 export const ProjectDetailView = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
     if (!id) {
-        console.error("Invalid project id");
-        navigate("/");
+        console.error('Invalid project id');
+        navigate('/');
     }
 
     const [activeTab, setActiveTab] = useState(0);
@@ -35,8 +23,8 @@ export const ProjectDetailView = () => {
 
     useEffect(() => {
         fetch(`http://localhost:3001/projects/${id}`, {
-            method: "GET",
-            mode: "cors",
+            method: 'GET',
+            mode: 'cors',
         })
             .then((response) => {
                 return response.json();
@@ -45,13 +33,13 @@ export const ProjectDetailView = () => {
                 setProject(data);
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
     }, []);
 
     const handleBack = () => {
-        navigate("/");
+        navigate('/');
     };
 
     return project ? (
@@ -72,47 +60,28 @@ export const ProjectDetailView = () => {
                     <CardContent>
                         <Grid container spacing={2}>
                             <Grid>
-                                <Typography
-                                    variant="subtitle2"
-                                    color="text.secondary"
-                                >
+                                <Typography variant="subtitle2" color="text.secondary">
                                     Client
                                 </Typography>
-                                <Typography variant="body1">
-                                    {project.clientName}
-                                </Typography>
+                                <Typography variant="body1">{project.clientName}</Typography>
                             </Grid>
                             <Grid>
-                                <Typography
-                                    variant="subtitle2"
-                                    color="text.secondary"
-                                >
+                                <Typography variant="subtitle2" color="text.secondary">
                                     Start Date
                                 </Typography>
-                                <Typography variant="body1">
-                                    {project.startDate}
-                                </Typography>
+                                <Typography variant="body1">{project.startDate}</Typography>
                             </Grid>
                             <Grid>
-                                <Typography
-                                    variant="subtitle2"
-                                    color="text.secondary"
-                                >
+                                <Typography variant="subtitle2" color="text.secondary">
                                     End Date
                                 </Typography>
-                                <Typography variant="body1">
-                                    {project.endDate}
-                                </Typography>
+                                <Typography variant="body1">{project.endDate}</Typography>
                             </Grid>
                         </Grid>
                     </CardContent>
                 </Card>
 
-                <Tabs
-                    value={activeTab}
-                    onChange={(_, value) => setActiveTab(value)}
-                    sx={{ mb: 3 }}
-                >
+                <Tabs value={activeTab} onChange={(_, value) => setActiveTab(value)} sx={{ mb: 3 }}>
                     <Tab label="Overview" />
                     <Tab label="Staffing" />
                     <Tab label="Phases & Tasks" />

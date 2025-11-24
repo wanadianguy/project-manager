@@ -1,35 +1,20 @@
-import {
-    AppBar,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Chip,
-    Container,
-    Grid,
-    IconButton,
-    Toolbar,
-    Typography,
-} from "@mui/material";
-import type { ContributorDashboardProps } from "./contributor-dashboard.types";
-import { AccessTime, Logout } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import type { Task } from "../../types/task.type";
-import { TimeLoggingDialog } from "../time-logging-dialogue/time-logging-dialogue";
-import type { Assignment } from "../../types/assignment.type";
+import { AppBar, Box, Button, Card, CardContent, Chip, Container, Grid, IconButton, Toolbar, Typography } from '@mui/material';
+import type { ContributorDashboardProps } from './contributor-dashboard.types';
+import { AccessTime, Logout } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import type { Task } from '../../types/task.type';
+import { TimeLoggingDialog } from '../time-logging-dialogue/time-logging-dialogue';
+import type { Assignment } from '../../types/assignment.type';
 
-export const ContributorDashboard = ({
-    onLogout,
-    onNavigate,
-}: ContributorDashboardProps) => {
-    const userId = localStorage.getItem("id");
+export const ContributorDashboard = (props: ContributorDashboardProps) => {
+    const userId = localStorage.getItem('id');
     const [assignments, setAssignments] = useState<Assignment[]>([]);
     const [selectedTask, setSelectedTask] = useState<Task>();
 
     useEffect(() => {
         fetch(`http://localhost:3001/assignments/user/${userId}`, {
-            method: "GET",
-            mode: "cors",
+            method: 'GET',
+            mode: 'cors',
         })
             .then((response) => {
                 return response.json();
@@ -38,7 +23,7 @@ export const ContributorDashboard = ({
                 setAssignments(data);
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
     }, []);
@@ -50,7 +35,7 @@ export const ContributorDashboard = ({
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Contributor Dashboard
                     </Typography>
-                    <IconButton color="inherit" onClick={onLogout}>
+                    <IconButton color="inherit" onClick={props.onLogout}>
                         <Logout />
                     </IconButton>
                 </Toolbar>
@@ -68,59 +53,33 @@ export const ContributorDashboard = ({
                                 <CardContent>
                                     <Box
                                         sx={{
-                                            display: "flex",
-                                            justifyContent: "space-between",
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
                                             mb: 1,
                                         }}
                                     >
-                                        <Typography variant="h6">
-                                            {assignment.task?.title}
-                                        </Typography>
-                                        <Chip
-                                            label={assignment.task?.status}
-                                            size="small"
-                                        />
+                                        <Typography variant="h6">{assignment.task?.title}</Typography>
+                                        <Chip label={assignment.task?.status} size="small" />
                                     </Box>
-                                    <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        gutterBottom
-                                    >
+                                    <Typography variant="body2" color="text.secondary" gutterBottom>
                                         {assignment.task?.description}
                                     </Typography>
 
                                     <Box sx={{ mt: 2 }}>
-                                        <Typography
-                                            variant="caption"
-                                            color="text.secondary"
-                                            display="block"
-                                        >
-                                            Project:{" "}
-                                            {
-                                                assignment.task?.phase?.project
-                                                    ?.name
-                                            }
+                                        <Typography variant="caption" color="text.secondary" display="block">
+                                            Project: {assignment.task?.phase?.project?.name}
                                         </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            color="text.secondary"
-                                            display="block"
-                                        >
-                                            Phase:{" "}
-                                            {assignment.task?.phase?.name}
+                                        <Typography variant="caption" color="text.secondary" display="block">
+                                            Phase: {assignment.task?.phase?.name}
                                         </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            color="text.secondary"
-                                            display="block"
-                                        >
+                                        <Typography variant="caption" color="text.secondary" display="block">
                                             Due: {assignment.task?.endDate}
                                         </Typography>
                                     </Box>
                                     <Box
                                         sx={{
                                             mt: 2,
-                                            display: "flex",
+                                            display: 'flex',
                                             gap: 1,
                                         }}
                                     >
@@ -128,9 +87,7 @@ export const ContributorDashboard = ({
                                             size="small"
                                             variant="contained"
                                             startIcon={<AccessTime />}
-                                            onClick={() =>
-                                                setSelectedTask(assignment.task)
-                                            }
+                                            onClick={() => setSelectedTask(assignment.task)}
                                         >
                                             Log Hours
                                         </Button>
@@ -143,11 +100,7 @@ export const ContributorDashboard = ({
             </Container>
 
             {selectedTask && (
-                <TimeLoggingDialog
-                    task={selectedTask}
-                    open={!!selectedTask}
-                    onClose={() => setSelectedTask(undefined)}
-                />
+                <TimeLoggingDialog task={selectedTask} open={!!selectedTask} onClose={() => setSelectedTask(undefined)} />
             )}
         </Box>
     );

@@ -1,40 +1,26 @@
-import { useState } from "react";
-import type { NewTaskDialogProps } from "./new-task-dialog.types";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    MenuItem,
-    Select,
-    TextField,
-} from "@mui/material";
+import { useState } from 'react';
+import type { NewTaskDialogProps } from './new-task-dialog.types';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, TextField } from '@mui/material';
 
-export const NewTaskDialog = ({
-    project,
-    open,
-    onClose,
-    onSave,
-}: NewTaskDialogProps) => {
-    const [phaseId, setPhaseId] = useState("");
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+export const NewTaskDialog = (props: NewTaskDialogProps) => {
+    const [phaseId, setPhaseId] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
     const [endDate, setEndDate] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
 
     const handleSubmit = () => {
-        fetch("http://localhost:3001/tasks", {
-            method: "POST",
-            mode: "cors",
+        fetch('http://localhost:3001/tasks', {
+            method: 'POST',
+            mode: 'cors',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 phaseId,
@@ -43,52 +29,41 @@ export const NewTaskDialog = ({
                 startDate: startDate.date,
                 dueDate: endDate.date,
                 endDate: new Date(),
-                status: "planned",
+                status: 'planned',
             }),
         })
             .then((response) => {
                 return response.json();
             })
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
 
-        setPhaseId("");
-        setTitle("");
-        setDescription("");
+        setPhaseId('');
+        setTitle('');
+        setDescription('');
         setStartDate({
             date: new Date(),
-            string: "",
+            string: '',
         });
         setEndDate({
             date: new Date(),
-            string: "",
+            string: '',
         });
-        onClose();
+        props.onClose();
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+        <Dialog open={props.open} onClose={props.onClose} maxWidth="sm" fullWidth>
             <DialogTitle>Create New Task</DialogTitle>
             <DialogContent>
-                <Select
-                    labelId="phase-id"
-                    id="phase"
-                    label="Phase"
-                    onChange={(e) => setPhaseId(e.target.value as string)}
-                >
-                    {project.phases.map((phase) => (
+                <Select labelId="phase-id" id="phase" label="Phase" onChange={(e) => setPhaseId(e.target.value as string)}>
+                    {props.project.phases.map((phase) => (
                         <MenuItem value={phase.id}>{phase.name}</MenuItem>
                     ))}
                 </Select>
-                <TextField
-                    fullWidth
-                    label="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    margin="normal"
-                />
+                <TextField fullWidth label="Title" value={title} onChange={(e) => setTitle(e.target.value)} margin="normal" />
                 <TextField
                     fullWidth
                     label="Description"
@@ -126,7 +101,7 @@ export const NewTaskDialog = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={props.onClose}>Cancel</Button>
                 <Button onClick={handleSubmit} variant="contained">
                     Create
                 </Button>

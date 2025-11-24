@@ -1,70 +1,59 @@
-import { useState } from "react";
-import type { NewProjectDialogProps } from "./new-project-dialog.types";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField,
-} from "@mui/material";
-import type { Project } from "../../types/project.type";
+import { useState } from 'react';
+import type { NewProjectDialogProps } from './new-project-dialog.types';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import type { Project } from '../../types/project.type';
 
-export const NewProjectDialog = ({
-    open,
-    onClose,
-    onSave,
-}: NewProjectDialogProps) => {
-    const [name, setName] = useState("");
-    const [clientName, setClientName] = useState("");
+export const NewProjectDialog = (props: NewProjectDialogProps) => {
+    const [name, setName] = useState('');
+    const [clientName, setClientName] = useState('');
     const [startDate, setStartDate] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
     const [endDate, setEndDate] = useState({
         date: new Date(),
-        string: "",
+        string: '',
     });
 
     const handleSubmit = () => {
-        fetch("http://localhost:3001/projects", {
-            method: "POST",
-            mode: "cors",
+        fetch('http://localhost:3001/projects', {
+            method: 'POST',
+            mode: 'cors',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 name,
                 clientName,
                 startDate: startDate.date,
                 endDate: endDate.date,
-                status: "planned",
+                status: 'planned',
             }),
         })
             .then((response) => {
                 return response.json();
             })
-            .then((data: Project) => onSave(data))
+            .then((data: Project) => props.onSave(data))
             .catch((error) => {
-                console.error("Something went wrong: " + error.message);
+                console.error(error);
                 return;
             });
 
-        setName("");
-        setClientName("");
+        setName('');
+        setClientName('');
         setStartDate({
             date: new Date(),
-            string: "",
+            string: '',
         });
         setEndDate({
             date: new Date(),
-            string: "",
+            string: '',
         });
-        onClose();
+        props.onClose();
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+        <Dialog open={props.open} onClose={props.onClose} maxWidth="sm" fullWidth>
             <DialogTitle>Create New Project</DialogTitle>
             <DialogContent>
                 <TextField
@@ -111,7 +100,7 @@ export const NewProjectDialog = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={props.onClose}>Cancel</Button>
                 <Button onClick={handleSubmit} variant="contained">
                     Create
                 </Button>

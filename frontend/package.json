@@ -4,8 +4,9 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "build": "tsc -b && vite build",
-        "dev": "vite",
+        "build": "npx tsc -b && vite build --mode development",
+        "start": "vite preview --mode development --port 5173",
+        "dev": "vite dev --port 5173",
         "playwright": "npx playwright test",
         "format": "prettier --write \"{src,tests}/**/*.ts\"",
         "lint": "eslint"

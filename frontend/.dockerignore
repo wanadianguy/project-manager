@@ -1,0 +1,7 @@
+.env.local
+.gitignore
+tests/
+node_modules/
+dist/
+test-results/
+.prettierrc.json

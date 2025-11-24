@@ -1,8 +1,14 @@
-FROM node:22
+FROM node:24 AS builder
 
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
 COPY . .
+RUN npm ci
+RUN npx tsc -b && npx vite build --mode docker
+
+FROM node:24-alpine
+
+WORKDIR /app
+RUN npm i -g serve
+COPY --from=builder /app/dist ./dist
 EXPOSE 5173
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["serve", "dist", "--single", "--listen", "5173"]

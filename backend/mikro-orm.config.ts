@@ -1,3 +1,4 @@
+import './preload-env';
 import { Migrator } from '@mikro-orm/migrations';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { defineConfig } from '@mikro-orm/postgresql';

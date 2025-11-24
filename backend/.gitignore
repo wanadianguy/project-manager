@@ -23,10 +23,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
 .temp
 .tmp
 pids

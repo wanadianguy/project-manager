@@ -1,0 +1,35 @@
+name: Playwright CI
+
+on:
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    playwright-tests:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Install Docker
+              uses: docker/setup-docker-action@v5
+
+            - name: Install Node v25
+              uses: actions/setup-node@v5
+              with:
+                  node-version: "25"
+
+            - name: Get source code
+              uses: actions/checkout@v5
+
+            - name: Install dependencies
+              run: cd frontend && npm ci && npx playwright install --with-deps && cd ../backend && npm ci
+
+            - name: Start database
+              run: docker compose -f docker-compose.database.yml up -d && cd backend && NODE_ENV=docker npx mikro-orm migration:up
+
+            - name: Start application
+              run: docker compose -f docker-compose.yml up -d
+
+            - name: Run frontend e2e tests
+              run: npx playwright test --reporter=dot
+              working-directory: frontend

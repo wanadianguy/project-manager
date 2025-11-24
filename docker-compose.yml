@@ -1,25 +1,24 @@
-name: miebach-project
+name: project-manager
 
 services:
     frontend:
         build:
             context: "./frontend"
             dockerfile: "frontend.Dockerfile"
-        container_name: miebach-frontend
+        container_name: project-manager-frontend
         ports:
             - 5173:5173
         environment:
-            - NODE_ENV=production
             - TZ=America/Toronto
         restart: unless-stopped
     backend:
         build:
             context: "./backend"
             dockerfile: "backend.Dockerfile"
-        container_name: miebach-backend
+        container_name: project-manager-backend
         ports:
             - 3001:3001
         environment:
-            - NODE_ENV=production
+            - NODE_ENV=docker
             - TZ=America/Toronto
         restart: unless-stopped

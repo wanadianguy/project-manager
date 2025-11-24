@@ -1,13 +1,13 @@
-name: miebach-project
+name: project-manager
 
 services:
     database:
         image: bitnami/postgresql:latest
-        container_name: miebach-database
+        container_name: project-manager-database
         ports:
             - 5432:5432
         environment:
-            - POSTGRESQL_DATABASE=miebach
+            - POSTGRESQL_DATABASE=projects
             - POSTGRESQL_PASSWORD=password
             - POSTGRESQL_POSTGRES_PASSWORD=password
             - POSTGRESQL_TIMEZONE=America/Toronto
